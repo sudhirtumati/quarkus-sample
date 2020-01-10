@@ -5,6 +5,8 @@ import static io.restassured.RestAssured.given;
 import javax.transaction.Transactional;
 
 import com.google.gson.JsonObject;
+import com.google.inject.Inject;
+import com.sudhirt.practice.repository.StudentRepository;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,9 @@ import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
 public class StudentResourceTest {
+
+    @Inject
+    StudentRepository studentRepository;
 
     @Test
     public void get_should_return_empty_list_when_students_are_not_available() {
@@ -49,6 +54,7 @@ public class StudentResourceTest {
                 .statusCode(201);
         given().contentType("application/json").body(payload.toString()).when().post("/students").then()
                 .statusCode(409);
+        studentRepository.deleteAll();
     }
 
 }
